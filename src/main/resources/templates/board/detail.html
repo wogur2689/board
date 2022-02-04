@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세조회 페이지</title>
+</head>
+<body>
+
+<h2 th:text="${boardDto.title}"></h2>
+<p th:inline="text">작성일 : [[${#temporals.format(boardDto.createdDate, 'yyyy-MM-dd HH:mm')}]]</p>
+
+<p th:text="${boardDto.content}"></p>
+
+<!-- 수정/삭제 -->
+<div>
+    <a th:href="@{'/post/edit/' + ${boardDto.id}}">
+        <button>수정</button>
+    </a>
+
+    <form id="delete-form" th:action="@{'/post/' + ${boardDto.id}}" method="post">
+        <input type="hidden" name="_method" value="delete">
+        <button id="delete-btn">삭제</button>
+    </form>
+</div>
+
+<!-- 변수 셋팅 -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var boardDto = /*[[${boardDto}]]*/ "";
+    /*]]>*/
+</script>
+
+<!-- script -->
+<script th:inline="javascript" th:src="@{/js/board.js}"></script>
+</body>
+</html>
+
+<!--
+<p th:inline="text">작성일 : [[$temporals.format(boardDto.createDate, 'yyyy-MM-dd HH:mm')}]]</p>
+th:text를 사용하면, 태그 사이에 작성한 내용은 사라지고 th:text 값으로 덮어씌어집니다.
+이를 해결하기 위해 th:inline을 사용하며, 변수는 [[ ${} ]]으로 표기.
+
+<input type="hidden" name="_method" value="delete"/>
+RESTful API작성을 위해 hiddenHttpMethodFilter을 이용한 것
+그러면 form태그의 method는 post이지만, 실제로는 컨트롤러에서 delete로 매핑이 됨.
+
+
+/*<![CDATA[ */ 내용 /*]]>*/
+JS에서 Java변수를 사용하기 위한 방식
+위에서 boardDto를 콘솔로 출력하는 스크립트를 작성하였으므로 게시글 상세 페이지에 접근 시, 개발자도구 콘솔창에서 확인가능.
+
+
+-->

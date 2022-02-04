@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 리스트</title>
+
+    <link rel="stylesheet" th:href="@{/css/board.css}">
+</head>
+<body>
+    <!-- HEADER -->
+    <div th:insert="common/header.html" id="header"></div>
+
+    <a th:href="@{/post}">글쓰기</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th class="one wide">번호</th>
+            <th class="ten wide">글제목</th>
+            <th class="two wide">작성자</th>
+            <th class="three wide">작성일</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <!-- CONTENTS !-->
+        <tr th:each="board : ${boardList}">
+            <td>
+                <span th:text="${board.id}"></span>
+            </td>
+            <td>
+                <a th:href="@{'/post/' + ${board.id}}">
+                   <span th:text="${board.title}"></span>
+                </a>
+            </td>
+            <td>
+                <span th:text="${board.writer}"></span>
+            </td>
+            <td>
+                <span th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <!--
+    페이징 div 엘리먼트
+    서버로부터 페이징 번호를 리스트 pageList 변수에 받아와서 번호를 뿌려줍니다.
+    각 번호를 누르면, 새로운 페이지 번호를 서버로 전달합니다.
+    -->
+    <div>
+        <span th:each="pageNum : ${pageList}" th:inline="text">
+            <a th:href="@{'/?page=' + ${pageNum}}">[[${pageNum}]]</a>
+        </span>
+    </div>
+
+    <form action="/board/search" method="GET">
+        <div>
+            <input name="keyword" type="text" placeholder="검색어를 입력해주세요"/>
+        </div>
+
+        <button>검색하기</button>
+    </form>
+
+    <!-- FOOTER -->
+    <div th:insert="common/footer.html" id="footer"></div>
+</body>
+</html>
+
+<!--
+thymeleaf 문법
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+XHTML 문서를 위한 XML 네임스페이스를 명시 (생략가능)
+IntelliJ에서 thymeleaf 문법 사용 시, 문법 사용시 에러나면 추가.
+
+th:insert
+다른 페이지를 현재 페이지에 삽입하는 역할(JSP의 include)
+
+th:href
+@{}의 의미는 애플리케이션이 설치된 경로를 기준으로 하는 상대경로
+a태그를 클릭하면 페이지를 이동.
+
+<link rel="stylesheet" th:href="@{/css/board.css}">
+board.css를 불러오는 코드
+css, js, img같은 정적 자원들을 static에 저장하면 스프링부트가 인식을 함.
+
+<tr th:each="board : ${boardList}">
+boardList는 컨트롤러가 넘겨주는 변수이며, 원소는 board변수로 사용하여 각 속성을 사용가능
+thymeleaf에서 반복문을 사용하는 부분
+컨트롤러가 넘겨주는 변수는 ${}으로 받을수 있음.
+
+<span th:text="${board.id}"></span>
+변수값을 escape 처리하여, 태그의 텍스트로 사용.
+
+<a th:href="@{'/post/' + ${board.id}}">
+글 제목을 누르면 상세페이지로 이동하기 위해 path variable을 사용
+
+<span th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+#temporals.format()메서드를 사용해 날짜를 포맷팅
+createdDate는 LocalDateTime 타입이기 때문에 #dates.format()을 사용하지 않음.
+
+초기 페이지 진입시 리스트를 보여주는 파일인 동시에 검색 결과로도 사용되는 페이지입니다.
+-->

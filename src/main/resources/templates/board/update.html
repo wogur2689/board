@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 수정 페이지</title>
+</head>
+<body>
+    <form th:action="@{'/post/edit/' + ${boardDto.id}}" method="post">
+        <input type="hidden" name="_method" value="put"/>
+        <input type="hidden" name="id" th:value="${boardDto.id}"/>
+
+        제목 : <input type="text" name="title" th:value="${boardDto.title}"> <br>
+        작성자 : <input type="text" name="writer" th:value="${boardDto.writer}"> <br>
+        <textarea name="content" th:text="${boardDto.content}"></textarea><br>
+
+        <input type="submit" value="수정">
+    </form>
+</body>
+</html>
+
+<!--
+<input type="hidden" name="_method" value="put"/>
+Restful API 작성을 위한 것으로, 컨트롤러에서 put 메서드로 매핑
+
+<input type="hidden" name="id" th:value="${boardDto.id}"/>
+hidden 타입을 게시글 id 값을 넘겨준 이유: JPA(BoardRepository.save())에서 insert와 update를 같은 메서드로 사용해서.
+같은 메서드를 호출하는데 id 값이 없으면 insert, id 값이 있으면 update가 되도록 동작.
+그래서 Service에서 update를 위한 메서드는 없고, insert와 같은 메서드를 사용.
+
+
+-->
