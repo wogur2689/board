@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게시글 수정</title>
+    <style>
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group textarea { height: 200px; }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn-submit { background-color: #28a745; color: white; }
+        .btn-cancel { background-color: #6c757d; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>게시글 수정</h1>
+        <form id="editForm">
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" value="<%= title %>" required>
+            </div>
+            <div class="form-group">
+                <label for="content">내용</label>
+                <textarea id="content" name="content" required><%= content %></textarea>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-submit">수정</button>
+                <a href="/board/view/<%= id %>" class="btn btn-cancel">취소</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('title').value,
+                content: document.getElementById('content').value
+            };
+
+            fetch('/board/<%= id %>', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('게시글이 수정되었습니다.');
+                    window.location.href = '/board/view/<%= id %>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('게시글 수정 중 오류가 발생했습니다.');
+            });
+        });
+    </script>
+</body>
+</html>

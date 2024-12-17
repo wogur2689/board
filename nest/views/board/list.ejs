@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게시판</title>
+    <style>
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .board-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .board-table th, .board-table td { padding: 10px; border: 1px solid #ddd; }
+        .board-table th { background-color: #f5f5f5; }
+        .write-btn { 
+            float: right;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>게시판</h1>
+        <a href="/board/write" class="write-btn">글쓰기</a>
+        
+        <table class="board-table">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (boards && boards.length > 0) { %>
+                    <% boards.forEach((board) => { %>
+                        <tr>
+                            <td><%= board.id %></td>
+                            <td><a href="/board/view/<%= board.id %>"><%= board.title %></a></td>
+                            <td><%= new Date(board.createdAt).toLocaleDateString() %></td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3" style="text-align: center;">등록된 게시글이 없습니다.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</body>
