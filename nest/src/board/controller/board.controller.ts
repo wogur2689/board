@@ -7,15 +7,26 @@ export class BoardController {
     constructor(private readonly boardService: BoardService) {}
 
     @Get()
-    @Render('board/index') // EJS 템플릿 렌더링
+    @Render('board/list') // EJS 템플릿 렌더링
     async getAllBoards() {
       const boards = await this.boardService.getAllBoards();
       console.log({boards});
       return { boards }; // EJS에서 사용할 데이터 반환
     }
 
-    @Get(':id')
+    @Get('view/:id')
+    @Render('board/view')
     async view(@Param('id') id: number) {
+        return await this.boardService.getBoardById(+id);
+    }
+
+    @Get('write')
+    @Render('board/write')
+    write() {}
+
+    @Get('edit/:id')
+    @Render('board/edit')
+    async edit(@Param('id') id: number) {
         return await this.boardService.getBoardById(+id);
     }
 
